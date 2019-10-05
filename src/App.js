@@ -1,5 +1,5 @@
 import React from 'react'
-import Loop from './Loop'
+import LessonsList from './LessonsList'
 import utils from './utils'
 import './list.css'
 
@@ -65,7 +65,7 @@ class App extends React.Component{
             <div className="list" key={day}>
               <p>{day}曜日</p>
               <div>
-                <Loop
+                <LessonsList
                   onClick={this.handleChangeEditing}
                   selectedId={selectedId}
                   lessons={lessons.filter(item => item.dayOfWeek === index)}
