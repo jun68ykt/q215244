@@ -1,12 +1,7 @@
 import React from 'react'
-import LessonsList from '../components/LessonsList'
-import utils from '../utils'
+import { LessonForm, LessonsList } from '../components'
+import { nextId, INITIAL_ID, WEEK_DAYS } from '../utils'
 import '../css/list.css'
-
-const WEEK_DAYS = [ "月", "火", "水", "木", "金" ]
-const MAX_PERIOD = 5
-const INITIAL_ID = 9000
-const nextId = ((id) => (() => id ++))(INITIAL_ID)
 
 const initialForm = {
   id: 0, // 有効なidの値はINITIAL_ID以上
@@ -24,8 +19,7 @@ class App extends React.Component{
     }
   }
 
-  handleSubmit = event => {
-    event.preventDefault()
+  handleSave = () => {
     const { lessons, form } = this.state
     if (!form.subject) return
 
@@ -62,45 +56,17 @@ class App extends React.Component{
   }
 
   render () {
-    const { lessons, form  } = this.state
+    const { lessons, form } = this.state
 
     return (
       <div>
         <h1>時間割</h1>
-        <form>
-          <select
-            name="dayOfWeek"
-            value={form.dayOfWeek}
-            onChange={this.handleChange}
-          >
-            <option value={-1}>---</option>
-            {WEEK_DAYS.map((day, index) =>
-                <option key={day} value={index}>{day}曜日</option>
-              )}
-          </select>
-
-          <select
-            name="period"
-            value={form.period}
-            onChange={this.handleChange}
-          >
-            <option value={0}>---</option>
-            {[...Array(MAX_PERIOD)].map((_, index) =>
-              <option key={index} value={index+1}>{utils.zenkaku(index+1)}限</option>
-              )}
-          </select>
-          <div>
-            <input
-              type="text"
-              name="subject"
-              value={form.subject}
-              onChange={this.handleChange}
-            />
-
-            <button onClick={this.handleSubmit}>保存</button>
-            <button onClick={this.handleDelete}>削除</button>
-          </div>
-        </form>
+        <LessonForm
+          {...form}
+          handleChange={this.handleChange}
+          handleSave={this.handleSave}
+          handleDelete={this.handleDelete}
+        />
         <div className="p-list">
           {WEEK_DAYS.map((day, index) =>(
             <div className="list" key={day}>
