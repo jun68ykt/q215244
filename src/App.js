@@ -32,7 +32,7 @@ class App extends React.Component{
           <select
             name="dayOfWeek"
             value={dayOfWeek}
-            onChange={this.handleChangeDayOfWeek}
+            onChange={this.handleChange}
           >
             <option value={-1}>---</option>
             {WEEK_DAYS.map((day, index) =>
@@ -43,7 +43,8 @@ class App extends React.Component{
           <select
             name="period"
             value={period}
-            onChange={this.handleChangePeriod}>
+            onChange={this.handleChange}
+          >
             <option value={0}>---</option>
             {[...Array(MAX_PERIOD)].map((_, index) =>
               <option key={index} value={index+1}>{utils.zenkaku(index+1)}限</option>
@@ -51,9 +52,10 @@ class App extends React.Component{
           </select>
           <div>
             <input
-              onChange={this.handleChange}
               type="text"
+              name="subject"
               value={subject}
+              onChange={this.handleChange}
             />
 
             <button onClick={this.handleSubmit}>保存</button>
@@ -96,15 +98,10 @@ class App extends React.Component{
   }
 
   handleChange = (event) => {
-    this.setState({subject:event.target.value})
-  }
-
-  handleChangeDayOfWeek = (event) => {
-    this.setState({ dayOfWeek: +event.target.value })
-  }
-
-  handleChangePeriod = (event) => {
-    this.setState({ period: +event.target.value })
+    const { name, value } = event.target
+    this.setState({
+      [name]: ['dayOfWeek', 'period'].includes(name) ? +value : value
+    })
   }
 
   handleSubmit (e) {
