@@ -1,5 +1,5 @@
 import React from 'react'
-import utils from './utils'
+import utils from '../utils'
 
 const LessonsList = ({ lessons, selectedId, onItemSelect }) => (
   <div>

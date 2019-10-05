@@ -1,7 +1,7 @@
 import React from 'react'
-import LessonsList from './LessonsList'
-import utils from './utils'
-import './list.css'
+import LessonsList from '../components/LessonsList'
+import utils from '../utils'
+import '../css/list.css'
 
 const WEEK_DAYS = [ "月", "火", "水", "木", "金" ]
 const MAX_PERIOD = 5
