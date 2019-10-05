@@ -39,16 +39,10 @@ class App extends React.Component{
     this.setState({ form })
   }
 
-  handleSelect = itemId => {
-    const { lessons, form } = this.state
-    if (form.id === itemId) {
-      this.setState({ form: { ...initialForm } })
-    } else {
-      const lesson = lessons.find(e => e.id === itemId)
-      if (lesson) {
-        this.setState({ form: { ...lesson } })
-      }
-    }
+  handleSelect = lesson => {
+    this.setState(
+      { form: { ...(this.state.form.id === lesson.id ? initialForm : lesson) } }
+    )
   }
 
   handleDelete = () => {

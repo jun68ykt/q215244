@@ -1,12 +1,12 @@
 import React from 'react'
 import { zenkaku } from '../utils'
 
-const LessonsList = ({ lessons, selectedId, onItemSelect }) => (
+const LessonsList = ({ lessons, selectedId, onSelect }) => (
   <div>
-    {lessons.map(lesson =>(
+    {lessons.map(lesson => (
       <div key={lesson.id}>
         <div
-          onClick={() => { onItemSelect(lesson.id) }}
+          onClick={() => { onSelect(lesson) }}
           className={lesson.id === selectedId ? 'selected' : ''}
         >
           {zenkaku(lesson.period)}限：{lesson.subject}

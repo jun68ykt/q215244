@@ -9,7 +9,7 @@ const LessonsByDaysOfWeek = ({ lessons, selectedId, handleSelect }) => (
         <p>{day}曜日</p>
         <div>
           <LessonsList
-            onItemSelect={handleSelect}
+            onSelect={handleSelect}
             selectedId={selectedId}
             lessons={
               lessons
