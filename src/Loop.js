@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 
-class Loop extends React.Component {
-  render () {
-    return (
-      <div>
-        {this.props.lists.map((l) =>(
-          <div key={l.days}>
-            <div onClick={this.props.onClick}>{l.value}{l.input}</div>
-          </div>
-        ))}
+const Loop = ({ lists, selectedId, onClick }) => (
+  <div>
+    {lists.map((l) =>(
+      <div key={l.id}>
+        <div
+          onClick={() => { onClick(l.id) }}
+          className={l.id === selectedId ? 'selected' : ''}
+        >
+          {l.value}{l.input}
+        </div>
       </div>
-    );
-  }
+    ))}
+  </div>
+)
 
-}
-
-export default Loop;
+export default Loop
