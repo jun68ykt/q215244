@@ -1,9 +1,10 @@
 import React from 'react'
 import Loop from './Loop'
+import utils from './utils'
 import './list.css'
 
 const WEEK_DAYS = [ "月", "火", "水", "木", "金" ]
-
+const MAX_PERIOD = 5
 const INITIAL_ID = 9000
 const nextId = ((id) => (() => id ++))(INITIAL_ID)
 
@@ -13,8 +14,8 @@ class App extends React.Component{
     this.state = {
       lessons: [],
       subject: "",
-      period: "",
-      dayOfWeek: -1,  // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
+      period: 0, // 1: １限, 2: ２限, ･･･ 5: ５限
+      dayOfWeek: -1, // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
       selectedId: -1
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -40,14 +41,13 @@ class App extends React.Component{
           </select>
 
           <select
+            name="period"
             value={period}
-            onChange={this.handleChangeOrders}>
-            <option value="">---</option>
-            <option value="１限:">１限</option>
-            <option value="２限:">２限</option>
-            <option value="３限:">３限</option>
-            <option value="４限:">４限</option>
-            <option value="５限:">５限</option>
+            onChange={this.handleChangePeriod}>
+            <option value={0}>---</option>
+            {[...Array(MAX_PERIOD)].map((_, index) =>
+              <option key={index} value={index+1}>{utils.zenkaku(index+1)}限</option>
+              )}
           </select>
           <div>
             <input
@@ -81,7 +81,7 @@ class App extends React.Component{
   handleChangeEditing (itemId) {
     const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
-      this.setState({ selectedId: -1, dayOfWeek: -1, period: "", subject: "" })
+      this.setState({ selectedId: -1, dayOfWeek: -1, period: 0, subject: "" })
     } else {
       const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
       this.setState({ selectedId: itemId, dayOfWeek, period, subject })
@@ -103,8 +103,8 @@ class App extends React.Component{
     this.setState({ dayOfWeek: +event.target.value })
   }
 
-  handleChangeOrders = (event) => {
-    this.setState({period:event.target.value})
+  handleChangePeriod = (event) => {
+    this.setState({ period: +event.target.value })
   }
 
   handleSubmit (e) {
@@ -121,7 +121,7 @@ class App extends React.Component{
       nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
     }
 
-    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: "", selectedId: -1 })
+    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: 0, selectedId: -1 })
   }
 }
 

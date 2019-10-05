@@ -1,4 +1,5 @@
 import React from 'react'
+import utils from './utils'
 
 const Loop = ({ lessons, selectedId, onClick }) => (
   <div>
@@ -8,7 +9,7 @@ const Loop = ({ lessons, selectedId, onClick }) => (
           onClick={() => { onClick(l.id) }}
           className={l.id === selectedId ? 'selected' : ''}
         >
-          {l.period}{l.subject}
+          {utils.zenkaku(l.period)}限：{l.subject}
         </div>
       </div>
     ))}
