@@ -20,7 +20,7 @@ class App extends React.Component{
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
-    this.handleChangeEditing = this.handleChangeEditing.bind(this)
+    this.handleSelect = this.handleSelect.bind(this)
   }
 
   render () {
@@ -68,7 +68,7 @@ class App extends React.Component{
               <p>{day}曜日</p>
               <div>
                 <LessonsList
-                  onClick={this.handleChangeEditing}
+                  onItemSelect={this.handleSelect}
                   selectedId={selectedId}
                   lessons={
                     lessons
@@ -84,7 +84,7 @@ class App extends React.Component{
     );
   }
 
-  handleChangeEditing (itemId) {
+  handleSelect (itemId) {
     const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
       this.setState({ selectedId: -1, dayOfWeek: -1, period: 0, subject: "" })
