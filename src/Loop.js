@@ -8,7 +8,7 @@ const Loop = ({ lessons, selectedId, onClick }) => (
           onClick={() => { onClick(l.id) }}
           className={l.id === selectedId ? 'selected' : ''}
         >
-          {l.value}{l.input}
+          {l.value}{l.subject}
         </div>
       </div>
     ))}
