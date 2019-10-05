@@ -13,7 +13,7 @@ class App extends React.Component{
     this.state = {
       lessons: [],
       subject: "",
-      value: "",
+      period: "",
       days: "",
       selectedId: -1
     }
@@ -23,7 +23,7 @@ class App extends React.Component{
   }
 
   render () {
-    const { days, value, subject, selectedId, lessons } = this.state
+    const { days, period, subject, selectedId, lessons } = this.state
     return (
       <div>
         <h1>時間割</h1>
@@ -41,7 +41,7 @@ class App extends React.Component{
           </select>
 
           <select
-            value={value}
+            value={period}
             onChange={this.handleChangeOrders}>
             <option value="">---</option>
             <option value="１限:">１限</option>
@@ -82,17 +82,17 @@ class App extends React.Component{
   handleChangeEditing (itemId) {
     const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
-      this.setState({ selectedId: -1, days: "", value: "", subject: "" })
+      this.setState({ selectedId: -1, days: "", period: "", subject: "" })
     } else {
-      const { days, value, subject } = lessons.find(e => e.id === itemId)
-      this.setState({ selectedId: itemId, days, value, subject })
+      const { days, period, subject } = lessons.find(e => e.id === itemId)
+      this.setState({ selectedId: itemId, days, period, subject })
     }
   }
 
   handleDelete () {
     this.setState({
       subject: this.state.subject,
-      value: this.state.value,
+      period: this.state.period,
       days: this.state.days})
   }
 
@@ -105,24 +105,24 @@ class App extends React.Component{
   }
 
   handleChangeOrders = (event) => {
-    this.setState({value:event.target.value})
+    this.setState({period:event.target.value})
   }
 
   handleSubmit (e) {
     e.preventDefault()
-    const { lessons, subject, value, days, selectedId } = this.state
+    const { lessons, subject, period, days, selectedId } = this.state
     if (!subject) return
 
     let nextLessons;
     if (selectedId >= INITIAL_ID) {
       nextLessons = lessons.map(e =>
-        e.id === selectedId ? { id: e.id, subject, value, days } : e
+        e.id === selectedId ? { id: e.id, subject, period, days } : e
       )
     } else {
-      nextLessons = [ ...lessons, { id: nextId(), subject, value, days } ]
+      nextLessons = [ ...lessons, { id: nextId(), subject, period, days } ]
     }
 
-    this.setState( { lessons: nextLessons, subject: "", days: "", value: "", selectedId: -1 })
+    this.setState( { lessons: nextLessons, subject: "", days: "", period: "", selectedId: -1 })
   }
 }
 
