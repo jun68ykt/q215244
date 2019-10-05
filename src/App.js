@@ -2,7 +2,7 @@ import React from 'react'
 import Loop from './Loop'
 import './list.css'
 
-const fixed = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日"]
+const WEEK_DAYS = [ "月", "火", "水", "木", "金" ]
 
 const INITIAL_ID = 9000
 const nextId = ((id) => (() => id ++))(INITIAL_ID)
@@ -14,7 +14,7 @@ class App extends React.Component{
       lessons: [],
       subject: "",
       period: "",
-      dayOfWeek: "",
+      dayOfWeek: -1,  // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
       selectedId: -1
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -29,15 +29,14 @@ class App extends React.Component{
         <h1>時間割</h1>
         <form>
           <select
+            name="dayOfWeek"
             value={dayOfWeek}
             onChange={this.handleChangeDayOfWeek}
           >
-            <option value="">---</option>
-            <option value="月曜日">月曜日</option>
-            <option value="火曜日">火曜日</option>
-            <option value="水曜日">水曜日</option>
-            <option value="木曜日">木曜日</option>
-            <option value="金曜日">金曜日</option>
+            <option value={-1}>---</option>
+            {WEEK_DAYS.map((day, index) =>
+                <option key={day} value={index}>{day}曜日</option>
+              )}
           </select>
 
           <select
@@ -62,14 +61,14 @@ class App extends React.Component{
           </div>
         </form>
         <div className="p-list">
-          {fixed.map((l) =>(
-            <div className="list" key={l}>
-              <p>{l}</p>
+          {WEEK_DAYS.map((day, index) =>(
+            <div className="list" key={day}>
+              <p>{day}曜日</p>
               <div>
                 <Loop
                   onClick={this.handleChangeEditing}
                   selectedId={selectedId}
-                  lessons={lessons.filter(item => item.dayOfWeek === l)}
+                  lessons={lessons.filter(item => item.dayOfWeek === index)}
                 />
               </div>
             </div>
@@ -82,7 +81,7 @@ class App extends React.Component{
   handleChangeEditing (itemId) {
     const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
-      this.setState({ selectedId: -1, dayOfWeek: "", period: "", subject: "" })
+      this.setState({ selectedId: -1, dayOfWeek: -1, period: "", subject: "" })
     } else {
       const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
       this.setState({ selectedId: itemId, dayOfWeek, period, subject })
@@ -101,7 +100,7 @@ class App extends React.Component{
   }
 
   handleChangeDayOfWeek = (event) => {
-    this.setState({dayOfWeek:event.target.value})
+    this.setState({ dayOfWeek: +event.target.value })
   }
 
   handleChangeOrders = (event) => {
@@ -122,7 +121,7 @@ class App extends React.Component{
       nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
     }
 
-    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: "", period: "", selectedId: -1 })
+    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: "", selectedId: -1 })
   }
 }
 
