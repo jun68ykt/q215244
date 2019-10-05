@@ -14,7 +14,7 @@ class App extends React.Component{
       lessons: [],
       subject: "",
       period: "",
-      days: "",
+      dayOfWeek: "",
       selectedId: -1
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -23,14 +23,14 @@ class App extends React.Component{
   }
 
   render () {
-    const { days, period, subject, selectedId, lessons } = this.state
+    const { dayOfWeek, period, subject, selectedId, lessons } = this.state
     return (
       <div>
         <h1>時間割</h1>
         <form>
           <select
-            value={days}
-            onChange={this.handleChangeDays}
+            value={dayOfWeek}
+            onChange={this.handleChangeDayOfWeek}
           >
             <option value="">---</option>
             <option value="月曜日">月曜日</option>
@@ -69,7 +69,7 @@ class App extends React.Component{
                 <Loop
                   onClick={this.handleChangeEditing}
                   selectedId={selectedId}
-                  lessons={lessons.filter(item => item.days === l)}
+                  lessons={lessons.filter(item => item.dayOfWeek === l)}
                 />
               </div>
             </div>
@@ -82,10 +82,10 @@ class App extends React.Component{
   handleChangeEditing (itemId) {
     const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
-      this.setState({ selectedId: -1, days: "", period: "", subject: "" })
+      this.setState({ selectedId: -1, dayOfWeek: "", period: "", subject: "" })
     } else {
-      const { days, period, subject } = lessons.find(e => e.id === itemId)
-      this.setState({ selectedId: itemId, days, period, subject })
+      const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
+      this.setState({ selectedId: itemId, dayOfWeek, period, subject })
     }
   }
 
@@ -93,15 +93,15 @@ class App extends React.Component{
     this.setState({
       subject: this.state.subject,
       period: this.state.period,
-      days: this.state.days})
+      dayOfWeek: this.state.dayOfWeek})
   }
 
   handleChange = (event) => {
     this.setState({subject:event.target.value})
   }
 
-  handleChangeDays = (event) => {
-    this.setState({days:event.target.value})
+  handleChangeDayOfWeek = (event) => {
+    this.setState({dayOfWeek:event.target.value})
   }
 
   handleChangeOrders = (event) => {
@@ -110,19 +110,19 @@ class App extends React.Component{
 
   handleSubmit (e) {
     e.preventDefault()
-    const { lessons, subject, period, days, selectedId } = this.state
+    const { lessons, subject, period, dayOfWeek, selectedId } = this.state
     if (!subject) return
 
     let nextLessons;
     if (selectedId >= INITIAL_ID) {
       nextLessons = lessons.map(e =>
-        e.id === selectedId ? { id: e.id, subject, period, days } : e
+        e.id === selectedId ? { id: e.id, subject, period, dayOfWeek } : e
       )
     } else {
-      nextLessons = [ ...lessons, { id: nextId(), subject, period, days } ]
+      nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
     }
 
-    this.setState( { lessons: nextLessons, subject: "", days: "", period: "", selectedId: -1 })
+    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: "", period: "", selectedId: -1 })
   }
 }
 
