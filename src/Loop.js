@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Loop = ({ lists, selectedId, onClick }) => (
+const Loop = ({ lessons, selectedId, onClick }) => (
   <div>
-    {lists.map((l) =>(
+    {lessons.map((l) =>(
       <div key={l.id}>
         <div
           onClick={() => { onClick(l.id) }}

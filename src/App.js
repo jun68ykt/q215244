@@ -11,7 +11,7 @@ class App extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
-      lists: [],
+      lessons: [],
       input: "",
       value: "",
       days: "",
@@ -23,7 +23,7 @@ class App extends React.Component{
   }
 
   render () {
-    const { days, value, input, selectedId, lists } = this.state
+    const { days, value, input, selectedId, lessons } = this.state
     return (
       <div>
         <h1>時間割</h1>
@@ -69,7 +69,7 @@ class App extends React.Component{
                 <Loop
                   onClick={this.handleChangeEditing}
                   selectedId={selectedId}
-                  lists={lists.filter(item => item.days === l)}
+                  lessons={lessons.filter(item => item.days === l)}
                 />
               </div>
             </div>
@@ -80,11 +80,11 @@ class App extends React.Component{
   }
 
   handleChangeEditing (itemId) {
-    const { lists, selectedId } = this.state
+    const { lessons, selectedId } = this.state
     if (selectedId === itemId) {
       this.setState({ selectedId: -1, days: "", value: "", input: "" })
     } else {
-      const { days, value, input } = lists.find(e => e.id === itemId)
+      const { days, value, input } = lessons.find(e => e.id === itemId)
       this.setState({ selectedId: itemId, days, value, input })
     }
   }
@@ -110,19 +110,19 @@ class App extends React.Component{
 
   handleSubmit (e) {
     e.preventDefault()
-    const { lists, input, value, days, selectedId } = this.state
+    const { lessons, input, value, days, selectedId } = this.state
     if (!input) return
 
-    let nextLists;
+    let nextLessons;
     if (selectedId >= INITIAL_ID) {
-      nextLists = lists.map(e =>
+      nextLessons = lessons.map(e =>
         e.id === selectedId ? { id: e.id, input, value, days } : e
       )
     } else {
-      nextLists = [ ...lists, { id: nextId(), input, value, days } ]
+      nextLessons = [ ...lessons, { id: nextId(), input, value, days } ]
     }
 
-    this.setState( { lists: nextLists, input: "", days: "", value: "", selectedId: -1 })
+    this.setState( { lessons: nextLessons, input: "", days: "", value: "", selectedId: -1 })
   }
 }
 
