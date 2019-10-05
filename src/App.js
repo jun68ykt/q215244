@@ -70,7 +70,11 @@ class App extends React.Component{
                 <LessonsList
                   onClick={this.handleChangeEditing}
                   selectedId={selectedId}
-                  lessons={lessons.filter(item => item.dayOfWeek === index)}
+                  lessons={
+                    lessons
+                      .filter(item => item.dayOfWeek === index)
+                      .sort((l1, l2) => l1.period - l2.period)
+                  }
                 />
               </div>
             </div>
