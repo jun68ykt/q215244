@@ -18,9 +18,47 @@ class App extends React.Component{
       dayOfWeek: -1, // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
       selectedId: -1
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-    this.handleSelect = this.handleSelect.bind(this)
+  }
+
+  handleSubmit = event => {
+    event.preventDefault()
+    const { lessons, subject, period, dayOfWeek, selectedId } = this.state
+    if (!subject) return
+
+    let nextLessons;
+    if (selectedId >= INITIAL_ID) {
+      nextLessons = lessons.map(e =>
+        e.id === selectedId ? { id: e.id, subject, period, dayOfWeek } : e
+      )
+    } else {
+      nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
+    }
+
+    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: 0, selectedId: -1 })
+  }
+
+  handleChange = event => {
+    const { name, value } = event.target
+    this.setState({
+      [name]: ['dayOfWeek', 'period'].includes(name) ? +value : value
+    })
+  }
+
+  handleSelect = itemId => {
+    const { lessons, selectedId } = this.state
+    if (selectedId === itemId) {
+      this.setState({ selectedId: -1, dayOfWeek: -1, period: 0, subject: "" })
+    } else {
+      const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
+      this.setState({ selectedId: itemId, dayOfWeek, period, subject })
+    }
+  }
+
+  handleDelete = () => {
+    this.setState({
+      subject: this.state.subject,
+      period: this.state.period,
+      dayOfWeek: this.state.dayOfWeek})
   }
 
   render () {
@@ -82,47 +120,6 @@ class App extends React.Component{
         </div>
       </div>
     );
-  }
-
-  handleSelect (itemId) {
-    const { lessons, selectedId } = this.state
-    if (selectedId === itemId) {
-      this.setState({ selectedId: -1, dayOfWeek: -1, period: 0, subject: "" })
-    } else {
-      const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
-      this.setState({ selectedId: itemId, dayOfWeek, period, subject })
-    }
-  }
-
-  handleDelete () {
-    this.setState({
-      subject: this.state.subject,
-      period: this.state.period,
-      dayOfWeek: this.state.dayOfWeek})
-  }
-
-  handleChange = (event) => {
-    const { name, value } = event.target
-    this.setState({
-      [name]: ['dayOfWeek', 'period'].includes(name) ? +value : value
-    })
-  }
-
-  handleSubmit (e) {
-    e.preventDefault()
-    const { lessons, subject, period, dayOfWeek, selectedId } = this.state
-    if (!subject) return
-
-    let nextLessons;
-    if (selectedId >= INITIAL_ID) {
-      nextLessons = lessons.map(e =>
-        e.id === selectedId ? { id: e.id, subject, period, dayOfWeek } : e
-      )
-    } else {
-      nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
-    }
-
-    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: 0, selectedId: -1 })
   }
 }
 
