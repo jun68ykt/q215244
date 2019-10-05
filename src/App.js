@@ -8,68 +8,69 @@ const MAX_PERIOD = 5
 const INITIAL_ID = 9000
 const nextId = ((id) => (() => id ++))(INITIAL_ID)
 
+const initialForm = {
+  id: 0, // 有効なidの値はINITIAL_ID以上
+  subject: "",
+  period: 0, // 1: １限, 2: ２限, ･･･ 5: ５限
+  dayOfWeek: -1, // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
+}
+
 class App extends React.Component{
   constructor(props) {
     super(props)
     this.state = {
       lessons: [],
-      subject: "",
-      period: 0, // 1: １限, 2: ２限, ･･･ 5: ５限
-      dayOfWeek: -1, // 0: "月曜日", 1: "火曜日" ･･･ 4: "金曜日"
-      selectedId: -1
+      form: { ...initialForm }
     }
   }
 
   handleSubmit = event => {
     event.preventDefault()
-    const { lessons, subject, period, dayOfWeek, selectedId } = this.state
-    if (!subject) return
+    const { lessons, form } = this.state
+    if (!form.subject) return
 
-    let nextLessons;
-    if (selectedId >= INITIAL_ID) {
-      nextLessons = lessons.map(e =>
-        e.id === selectedId ? { id: e.id, subject, period, dayOfWeek } : e
-      )
-    } else {
-      nextLessons = [ ...lessons, { id: nextId(), subject, period, dayOfWeek } ]
-    }
+    const nextLessons = form.id >= INITIAL_ID
+      ? lessons.map(e => e.id === form.id ? { ...form } : e)
+      : [ ...lessons, { ...form, id: nextId() } ]
 
-    this.setState( { lessons: nextLessons, subject: "", dayOfWeek: -1, period: 0, selectedId: -1 })
+    this.setState( { lessons: nextLessons, form: { ...initialForm } })
   }
 
   handleChange = event => {
     const { name, value } = event.target
-    this.setState({
+    const form = {
+      ...this.state.form,
       [name]: ['dayOfWeek', 'period'].includes(name) ? +value : value
-    })
+    }
+    this.setState({ form })
   }
 
   handleSelect = itemId => {
-    const { lessons, selectedId } = this.state
-    if (selectedId === itemId) {
-      this.setState({ selectedId: -1, dayOfWeek: -1, period: 0, subject: "" })
+    const { lessons, form } = this.state
+    if (form.id === itemId) {
+      this.setState({ form: { ...initialForm } })
     } else {
-      const { dayOfWeek, period, subject } = lessons.find(e => e.id === itemId)
-      this.setState({ selectedId: itemId, dayOfWeek, period, subject })
+      const lesson = lessons.find(e => e.id === itemId)
+      if (lesson) {
+        this.setState({ form: { ...lesson } })
+      }
     }
   }
 
   handleDelete = () => {
-    this.setState({
-      subject: this.state.subject,
-      period: this.state.period,
-      dayOfWeek: this.state.dayOfWeek})
+    // TODO: 後で作成
   }
 
   render () {
-    const { dayOfWeek, period, subject, selectedId, lessons } = this.state
+    const { lessons, form  } = this.state
+
     return (
       <div>
         <h1>時間割</h1>
         <form>
           <select
             name="dayOfWeek"
-            value={dayOfWeek}
+            value={form.dayOfWeek}
             onChange={this.handleChange}
           >
             <option value={-1}>---</option>
@@ -80,7 +81,7 @@ class App extends React.Component{
 
           <select
             name="period"
-            value={period}
+            value={form.period}
             onChange={this.handleChange}
           >
             <option value={0}>---</option>
@@ -92,7 +93,7 @@ class App extends React.Component{
             <input
               type="text"
               name="subject"
-              value={subject}
+              value={form.subject}
               onChange={this.handleChange}
             />
 
@@ -107,7 +108,7 @@ class App extends React.Component{
               <div>
                 <LessonsList
                   onItemSelect={this.handleSelect}
-                  selectedId={selectedId}
+                  selectedId={form.id}
                   lessons={
                     lessons
                       .filter(item => item.dayOfWeek === index)
