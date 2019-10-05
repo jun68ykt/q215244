@@ -1,6 +1,6 @@
 import React from 'react'
-import { LessonForm, LessonsList } from '../components'
-import { nextId, INITIAL_ID, WEEK_DAYS } from '../utils'
+import { Container, LessonForm, LessonsByDaysOfWeek, Title } from '../components'
+import { nextId, INITIAL_ID } from '../utils'
 import '../css/list.css'
 
 const initialForm = {
@@ -56,36 +56,21 @@ class App extends React.Component{
   }
 
   render () {
-    const { lessons, form } = this.state
-
     return (
-      <div>
-        <h1>時間割</h1>
+      <Container>
+        <Title text="時間割" />
         <LessonForm
-          {...form}
+          {...this.state.form}
           handleChange={this.handleChange}
           handleSave={this.handleSave}
           handleDelete={this.handleDelete}
         />
-        <div className="p-list">
-          {WEEK_DAYS.map((day, index) =>(
-            <div className="list" key={day}>
-              <p>{day}曜日</p>
-              <div>
-                <LessonsList
-                  onItemSelect={this.handleSelect}
-                  selectedId={form.id}
-                  lessons={
-                    lessons
-                      .filter(item => item.dayOfWeek === index)
-                      .sort((l1, l2) => l1.period - l2.period)
-                  }
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+        <LessonsByDaysOfWeek
+          lessons={this.state.lessons}
+          selectedId={this.state.form.id}
+          handleSelect={this.handleSelect}
+        />
+      </Container>
     );
   }
 }
